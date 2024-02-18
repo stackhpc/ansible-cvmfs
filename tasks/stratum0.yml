@@ -32,6 +32,7 @@
 
 - name: Include Apache tasks
   ansible.builtin.include_tasks: apache.yml
+  when: "cvmfs_storage == 'disk'"
 
 - name: Include firewall tasks
   ansible.builtin.include_tasks: firewall.yml
@@ -40,22 +41,31 @@
   when: cvmfs_manage_firewall
 
 - name: Create repositories
-  ansible.builtin.command: |
-    /usr/bin/cvmfs_server mkfs {{ cvmfs_config_apache_flag }} -o {{ item.owner | default('root') }} -f {{ cvmfs_union_fs }} {{ item.repository }}
+  command: >-
+    /usr/bin/cvmfs_server mkfs
+      {{ cvmfs_storage_cli_options }}
+      {{ cvmfs_config_apache_flag }}
+      -o {{ item.owner | default('root') }}
+      -f {{ cvmfs_union_fs }}
+      {{ item.repository }}
   args:
-    creates: /srv/cvmfs/{{ item.repository }}
+    creates: "{{ '/srv/cvmfs/' ~ item.repository if (cvmfs_storage == 'disk') else '/etc/cvmfs/repositories.d/' ~ item.repository }}"
   with_items: "{{ cvmfs_repositories }}"
   notify:
-    - Restart apache
+    - restart apache
 
 - name: Ensure repositories are imported
-  ansible.builtin.command: |
-    /usr/bin/cvmfs_server import -r {{ cvmfs_config_apache_flag }} -o {{ item.owner | default('root') }} -f {{ cvmfs_union_fs }} {{ item.repository }}
+  command: >-
+    /usr/bin/cvmfs_server import -r
+      {{ cvmfs_config_apache_flag }}
+      -o {{ item.owner | default('root') }}
+      -f {{ cvmfs_union_fs }}
+      {{ item.repository }}
   args:
     creates: /etc/cvmfs/repositories.d/{{ item.repository }}
   with_items: "{{ cvmfs_repositories }}"
   notify:
-    - Restart apache
+    - restart apache
 
 - name: Include repository server options tasks
   ansible.builtin.include_tasks: options.yml
