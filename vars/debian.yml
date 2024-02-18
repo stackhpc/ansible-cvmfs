@@ -10,6 +10,7 @@ cvmfs_squid_group: proxy
 cvmfs_packages:
   stratum0:
     - apache2
+    - cvmfs
     - cvmfs-server
     - cvmfs-config-default
   stratum1-disk:
