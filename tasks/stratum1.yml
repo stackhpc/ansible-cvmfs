@@ -8,19 +8,20 @@
 - name: Include key setup tasks
   ansible.builtin.include_tasks: keys.yml
 
-- name: Disable Apache listen port in main config file
+- name: Disable Apache listen port lines in main config file that are not managed by Ansible
   ansible.builtin.replace:
     dest: "{{ cvmfs_apache_conf_file }}"
-    regexp: '^Listen(.*)$'
-    replace: '#Listen\1'
+    regexp: '(?<!BEGIN ANSIBLE MANAGED BLOCK\n)(^Listen\s[0-9]+)$'
+    replace: '#\1'
     backup: true
   when: cvmfs_config_apache
   notify:
     - Reload apache
 
-- name: Add CVMFS-specific block in Apache configuration file for HTTP ports to listen on
+- name: Add Ansible-managed block in Apache configuration file for HTTP ports to listen on
   ansible.builtin.blockinfile:
     path: "{{ cvmfs_apache_conf_file }}"
+    insertafter: '^#Listen\s[0-9]+$'
     block: |
         {% if cvmfs_stratum1_squid %}
         Listen {{ cvmfs_stratum1_apache_port_with_squid }}
