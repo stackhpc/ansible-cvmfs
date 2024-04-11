@@ -1,7 +1,6 @@
 ---
 cvmfs_apache_service_name: httpd
 cvmfs_apache_conf_file: /etc/httpd/conf/httpd.conf
-cvmfs_apache_conf_dir: conf.d
 
 cvmfs_squid_service_name: squid
 cvmfs_squid_conf_file: /etc/squid/squid.conf
