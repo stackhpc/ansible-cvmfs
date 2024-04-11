@@ -5,7 +5,7 @@
 http_port 80 accel
 http_port 3128 accel
 http_access allow all
-cache_peer 127.0.0.1 parent {{ cvmfs_stratum1_apache_port }} 0 no-query originserver
+cache_peer 127.0.0.1 parent {{ cvmfs_stratum1_apache_port_with_squid }} 0 no-query originserver
 
 {% if cvmfs_stratum1_cache_dir is defined %}
 cache_dir ufs {{ cvmfs_stratum1_cache_dir.dir }} {{ cvmfs_stratum1_cache_dir.size }} 16 256
