@@ -34,5 +34,5 @@
 
 - name: Install CernVM-FS packages and dependencies (apt)
   ansible.builtin.apt:
-    name: "{{ cvmfs_packages[_cvmfs_role] }}"
+    name: "{{ cvmfs_packages[_cvmfs_role] | reject('equalto', omit) | list }}"
     state: "{{ 'latest' if _cvmfs_upgrade else 'present' }}"
