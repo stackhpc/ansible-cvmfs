@@ -18,7 +18,10 @@ cvmfs_stratum1_http_ports:
 cvmfs_localproxy_http_ports:
   - 3128
 
-cvmfs_stratum1_apache_port: 8008
+cvmfs_stratum1_squid: false
+# if a Squid frontend is used on the Stratum 1, Apache needs to listen on an internal port
+# otherwise we stick to cvmfs_stratum1_http_ports
+cvmfs_stratum1_apache_port_with_squid: 8008
 cvmfs_stratum1_cache_mem: 128 # MB
 
 # Storage backend for Stratum 0/1 servers

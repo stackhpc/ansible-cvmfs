@@ -1,6 +1,7 @@
 ---
 cvmfs_apache_service_name: apache2
 cvmfs_apache_conf_file: /etc/apache2/apache2.conf
+cvmfs_apache_conf_dir: conf-enabled
 
 cvmfs_squid_service_name: squid
 cvmfs_squid_conf_file: /etc/squid/squid.conf
@@ -18,7 +19,7 @@ cvmfs_packages:
     - cvmfs-server
     - cvmfs-config-default
     - libapache2-mod-wsgi-py3
-    - squid
+    - "{{ 'squid' if cvmfs_stratum1_squid else omit }}"
   stratum1-s3:
     - cvmfs-server
   localproxy:

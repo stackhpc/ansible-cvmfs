@@ -115,8 +115,9 @@ variable | type | description
 `cvmfs_manage_firewall` | boolean | Attempt to configure firewalld (EL) or ufw (Debian) to permit traffic to configured ports. Default is `false`.
 `cvmfs_squid_conf_src` | path | Path to template Squid configuration file (for Stratum 1 and local proxy servers). Defaults are in the role `templates/` directory.
 `cvmfs_stratum0_http_ports` | list of integers | Port(s) to configure Apache on Stratum 0 servers to listen on. Default is `80`.
-`cvmfs_stratum1_http_ports` | list of integers | Port(s) to configure Squid on Stratum 1 servers to listen on. Default is `80` and `8000`.
-`cvmfs_stratum1_apache_port` | integer | Port to configure Apache on Stratum 1 servers to listen on. Default is `8008`.
+`cvmfs_stratum1_http_ports` | list of integers | Public port(s) to configure Apache or Squid on Stratum 1 servers to listen on. Default is `80` and `8000`.
+`cvmfs_stratum1_apache_port_with_squid` | integer | Port to configure Apache on Stratum 1 servers to listen on when using a Squid frontend. Default is `8008`.
+`cvmfs_stratum1_squid` | boolean | Install and configure a Squid frontend on Stratum 1 servers. Default is `false`.
 `cvmfs_stratum1_cache_mem` | integer in MB | Amount of memory for Squid to use for caching. Default is `128`.
 `cvmfs_stratum1_cache_dir` | list of dicts |
 `cvmfs_localproxy_http_ports` | list of integers | Port(s) to configure Squid on local proxy servers to listen on.  Default is `3128`.
