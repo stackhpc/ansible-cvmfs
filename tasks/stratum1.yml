@@ -8,13 +8,36 @@
 - name: Include key setup tasks
   ansible.builtin.include_tasks: keys.yml
 
-- name: Change Apache listen port
+- name: Disable Apache listen port in main config file
   ansible.builtin.lineinfile:
     dest: "{{ cvmfs_apache_conf_file }}"
-    line: Listen {{ cvmfs_stratum1_apache_port }}
     regexp: ^Listen\s+
+    state: absent
     backup: true
   when: cvmfs_config_apache
+  notify:
+    - Reload apache
+
+- name: Include Apache configuration file from conf.d directory
+  ansible.builtin.lineinfile:
+    dest: "{{ cvmfs_apache_conf_file }}"
+    line: "IncludeOptional {{ cvmfs_apache_conf_dir }}/*.conf"
+    state: present
+  notify:
+    - Reload apache
+
+- name: Make CVMFS-specific Apache configuration file
+  ansible.builtin.copy:
+    dest: "/{{ '/'.join(cvmfs_apache_conf_file.split('/')[1:3]) }}/{{ cvmfs_apache_conf_dir }}/cvmfs_ports.conf"
+    content: |
+        {% if cvmfs_stratum1_squid %}
+        Listen {{ cvmfs_stratum1_apache_port_with_squid }}
+        {% else %}
+        {% for port in cvmfs_stratum1_http_ports %}
+        Listen {{ port }}
+        {% endfor %}
+        {% endif %}
+    mode: 0644
   notify:
     - Reload apache
 
@@ -29,7 +52,7 @@
   ansible.builtin.include_tasks: squid.yml
   vars:
     _cvmfs_squid_conf_src: "{{ cvmfs_squid_conf_src | default('stratum1_squid.conf.j2') }}"
-  when: "cvmfs_storage == 'disk'"
+  when: cvmfs_storage == 'disk' and cvmfs_stratum1_squid
 
 - name: Include firewall tasks
   ansible.builtin.include_tasks: firewall.yml
