@@ -19,7 +19,7 @@ cvmfs_packages:
     - cvmfs-server
     - cvmfs-config-default
     - libapache2-mod-wsgi-py3
-    - squid
+    - "{{ 'squid' if cvmfs_stratum1_squid else omit }}"
   stratum1-s3:
     - cvmfs-server
   localproxy:
