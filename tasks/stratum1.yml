@@ -9,27 +9,19 @@
   ansible.builtin.include_tasks: keys.yml
 
 - name: Disable Apache listen port in main config file
-  ansible.builtin.lineinfile:
+  ansible.builtin.replace:
     dest: "{{ cvmfs_apache_conf_file }}"
-    regexp: ^Listen\s+
-    state: absent
+    regexp: '^Listen(.*)$'
+    replace: '#Listen\1'
     backup: true
   when: cvmfs_config_apache
   notify:
     - Reload apache
 
-- name: Include Apache configuration file from conf.d directory
-  ansible.builtin.lineinfile:
-    dest: "{{ cvmfs_apache_conf_file }}"
-    line: "IncludeOptional {{ cvmfs_apache_conf_dir }}/*.conf"
-    state: present
-  notify:
-    - Reload apache
-
-- name: Make CVMFS-specific Apache configuration file
-  ansible.builtin.copy:
-    dest: "/{{ '/'.join(cvmfs_apache_conf_file.split('/')[1:3]) }}/{{ cvmfs_apache_conf_dir }}/cvmfs_ports.conf"
-    content: |
+- name: Add CVMFS-specific block in Apache configuration file for HTTP ports to listen on
+  ansible.builtin.blockinfile:
+    path: "{{ cvmfs_apache_conf_file }}"
+    block: |
         {% if cvmfs_stratum1_squid %}
         Listen {{ cvmfs_stratum1_apache_port_with_squid }}
         {% else %}
