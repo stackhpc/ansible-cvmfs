@@ -11,7 +11,11 @@
 - name: Disable Apache listen port lines in main config file that are not managed by Ansible
   ansible.builtin.replace:
     dest: "{{ cvmfs_apache_conf_file }}"
-    regexp: '(?<!BEGIN ANSIBLE MANAGED BLOCK\n)(^Listen\s[0-9]+)$'
+    # TODO: this regexp only works well for Ansible managed blocks with one or two "Listen" lines,
+    # otherwise it will comment the lines in the middle of the block (i.e the ones that are not directly
+    # below/above the '# BEGIN/END ANSIBLE MANAGED BLOCK' comment). They will be restored in the next step,
+    # but it would be cleaner if that does not happen with a more advanced regex/solution.
+    regexp: '(?<!# BEGIN ANSIBLE MANAGED BLOCK\n)(^Listen\s[0-9]+$)(?!\n# END ANSIBLE MANAGED BLOCK)'
     replace: '#\1'
     backup: true
   when: cvmfs_config_apache
