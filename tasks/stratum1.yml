@@ -61,6 +61,7 @@
   ansible.builtin.copy:
     content: |
       CVMFS_GEO_LICENSE_KEY="{{ cvmfs_geo_license_key }}"
+      CVMFS_GEO_ACCOUNT_ID="{{ cvmfs_geo_account_id }}"
     mode: 0400
     dest: /etc/cvmfs/server.local
   when: cvmfs_geo_license_key is defined
