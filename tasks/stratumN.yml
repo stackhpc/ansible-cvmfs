@@ -2,7 +2,7 @@
 - name: Disk storage tasks
   block:
     - name: Create /srv filesystem
-      community.general.system.filesystem:
+      community.general.filesystem:
         dev: "{{ cvmfs_srv_device }}"
         force: false
         fstype: "{{ cvmfs_srv_fstype | default('ext4') }}"

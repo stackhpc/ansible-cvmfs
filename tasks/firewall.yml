@@ -9,7 +9,7 @@
   when: ansible_os_family == "RedHat"
 
 - name: Ensure http is not firewalled (ufw)
-  community.general.system.ufw:
+  community.general.ufw:
     rule: allow
     port: "{{ item }}"
     proto: tcp
