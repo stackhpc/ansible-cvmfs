@@ -53,6 +53,7 @@ variable | type | description
 --- | --- | ---
 `cvmfs_role` | string | Type of CVMFS host: `client`, `stratum0`, `stratum1`, or `localproxy`. Alternatively, you may put hosts in to groups `cvmfsclients`, `cvmfsstratum0servers`, `cvmfsstratum1servers`, and `cvmfslocalproxies`. Controls what packages are installed and what configuration is performed.
 `cvmfs_keys` | list of dicts | Keys to install on hosts of all types.
+`cvmfs_nfiles` | integer | Maximum number of open file descriptors that can be used by the CernVM-FS process.
 `cvmfs_server_urls` | list of dicts | CVMFS server URLs, the value of `CVMFS_SERVER_URL` in `/etc/cvmfs/domain.d/<domain>.conf`.
 `cvmfs_repositories` | list of dicts | CVMFS repository configurations, the value of `CVMFS_REPOSITORIES` in `/etc/cvmfs/default.local` plus additional settings in `/etc/cvmfs/repositories.d/<repository>/{client,server}.conf`.
 `cvmfs_config_repo` | dict | CVMFS [Configuration Repository][cvmfs-config-repo] configuration, see the value of `galaxy_cvmfs_config_repo` in the [defaults][defaults] for syntax.
