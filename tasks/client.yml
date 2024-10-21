@@ -78,6 +78,7 @@
       CVMFS_HTTP_PROXY="{{ cvmfs_http_proxies | join(';') }}"
       CVMFS_QUOTA_LIMIT="{{ cvmfs_quota_limit | default('4000') }}"
       CVMFS_CACHE_BASE="{{ cvmfs_cache_base | default('/var/lib/cvmfs') }}"
+      CVMFS_NFILES="{{ cvmfs_nfiles | default('131072') }}"
     dest: /etc/cvmfs/default.local
     owner: root
     group: root
